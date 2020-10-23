@@ -23,7 +23,7 @@
         "phpunit/phpunit": "^8.5"
     },
     "autoload": {
-        "psr-0": { "Prezent\\Doctrine\\Translatable": "lib/" }
+        "psr-0": { "Hgabka\\Doctrine\\Translatable": "lib/" }
     },
     "extra": {
         "branch-alias": {
