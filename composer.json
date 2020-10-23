@@ -1,5 +1,5 @@
 {
-    "name": "prezent/doctrine-translatable",
+    "name": "hgabka/doctrine-translatable",
     "type": "library",
     "description": "Translatable behaviour extension for Doctrine2",
     "keywords": [
@@ -8,17 +8,10 @@
         "translatable",
         "i18n"
     ],
-    "homepage": "http://www.prezent.nl",
+    "homepage": "http://hgabka.eu",
     "authors": [{
-        "name": "Prezent Internet B.V.",
-        "email": "github@prezent.nl"
+        "name": "Gabe"
     }],
-    "license": "MIT",
-    "support": {
-        "wiki": "https://github.com/prezent/doctrine-translatable/tree/master/doc",
-        "issues": "https://github.com/prezent/doctrine-translatable/issues",
-        "source": "https://github.com/prezent/doctrine-translatable"
-    },
     "require": {
         "php": ">=7.1.0",
         "doctrine/common": "^2.3",
