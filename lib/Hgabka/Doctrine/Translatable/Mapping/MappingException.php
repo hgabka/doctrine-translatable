@@ -1,6 +1,6 @@
 <?php
 
-namespace Prezent\Doctrine\Translatable\Mapping;
+namespace Hgabka\Doctrine\Translatable\Mapping;
 
 class MappingException extends \Exception
 {
