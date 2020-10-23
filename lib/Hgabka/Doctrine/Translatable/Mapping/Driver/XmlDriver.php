@@ -1,19 +1,12 @@
 <?php
 
-/*
- * (c) Prezent Internet B.V. <info@prezent.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Prezent\Doctrine\Translatable\Mapping\Driver;
+namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Common\Persistence\Mapping\Driver\FileDriver as DoctrineFileDriver;
 use Doctrine\ORM\Mapping\Driver\XmlDriver as ORMXmlDriver;
-use Prezent\Doctrine\Translatable\Mapping\PropertyMetadata;
-use Prezent\Doctrine\Translatable\Mapping\TranslatableMetadata;
-use Prezent\Doctrine\Translatable\Mapping\TranslationMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\PropertyMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 use SimpleXMLElement;
 
 
@@ -39,9 +32,9 @@ class XmlDriver extends FileDriver
 
         $xml = new SimpleXMLElement($config);
 
-        $xml->registerXPathNamespace('prezent', 'prezent');
+        $xml->registerXPathNamespace('hgabka', 'hgabka');
 
-        $nodeList = $xml->xpath('//prezent:translatable');
+        $nodeList = $xml->xpath('//hgabka:translatable');
         if (0 == count($nodeList)) {
             return;
         }
@@ -105,8 +98,8 @@ class XmlDriver extends FileDriver
         }
 
         $xml = new SimpleXMLElement($config);
-        $xml->registerXPathNamespace('prezent', 'prezent');
-        $nodeList = $xml->xpath('//prezent:translatable');
+        $xml->registerXPathNamespace('hgabka', 'hgabka');
+        $nodeList = $xml->xpath('//hgabka:translatable');
 
         if (0 == count($nodeList)) {
             return;
