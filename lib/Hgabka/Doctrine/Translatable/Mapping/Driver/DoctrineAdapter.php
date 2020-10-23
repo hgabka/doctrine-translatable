@@ -1,13 +1,6 @@
 <?php
 
-/*
- * (c) Prezent Internet B.V. <info@prezent.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Prezent\Doctrine\Translatable\Mapping\Driver;
+namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver as DoctrineAnnotationDriver;
@@ -23,8 +16,6 @@ use Metadata\Driver\DriverInterface;
 /**
  * Adapt a Doctrine metadata driver
  *
- * @author Sander Marechal <sander@prezent.nl>
- * @author Joris van de Sande <joris.van.de.sande@freshheads.com>
  */
 class DoctrineAdapter
 {
@@ -84,7 +75,7 @@ class DoctrineAdapter
                 $driverName = str_replace('Simplified', '', $driverName);
             }
 
-            $class = 'Prezent\\Doctrine\\Translatable\\Mapping\\Driver\\' . $driverName;
+            $class = 'Hgabka\\Doctrine\\Translatable\\Mapping\\Driver\\' . $driverName;
 
             if (class_exists($class)) {
                 return new $class($omDriver->getLocator());
