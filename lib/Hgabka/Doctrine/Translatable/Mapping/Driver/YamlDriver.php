@@ -1,19 +1,12 @@
 <?php
 
-/*
- * (c) Prezent Internet B.V. <info@prezent.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Prezent\Doctrine\Translatable\Mapping\Driver;
+namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Common\Persistence\Mapping\Driver\FileDriver as DoctrineFileDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver as ORMYamlDriver;
-use Prezent\Doctrine\Translatable\Mapping\PropertyMetadata;
-use Prezent\Doctrine\Translatable\Mapping\TranslatableMetadata;
-use Prezent\Doctrine\Translatable\Mapping\TranslationMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\PropertyMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -33,15 +26,15 @@ class YamlDriver extends FileDriver
     protected function loadTranslatableMetadata($className, $config)
     {
         if (! isset($config[$className])
-            || ! isset($config[$className]['prezent'])
-            || ! array_key_exists('translatable', $config[$className]['prezent'])
+            || ! isset($config[$className]['hgabka'])
+            || ! array_key_exists('translatable', $config[$className]['hgabka'])
         ) {
             return;
         }
 
         $classMetadata = new TranslatableMetadata($className);
 
-        $translatable = $config[$className]['prezent']['translatable'] ?: array();
+        $translatable = $config[$className]['hgabka']['translatable'] ?: array();
 
         $propertyMetadata = new PropertyMetadata(
             $className,
@@ -83,15 +76,15 @@ class YamlDriver extends FileDriver
     protected function loadTranslationMetadata($className, $config)
     {
         if (! isset($config[$className])
-            || ! isset($config[$className]['prezent'])
-            || ! array_key_exists('translatable', $config[$className]['prezent'])
+            || ! isset($config[$className]['hgabka'])
+            || ! array_key_exists('translatable', $config[$className]['hgabka'])
         ) {
             return;
         }
 
         $classMetadata = new TranslationMetadata($className);
 
-        $translatable = $config[$className]['prezent']['translatable'] ?: array();
+        $translatable = $config[$className]['hgabka']['translatable'] ?: array();
 
         $propertyMetadata = new PropertyMetadata(
             $className,
