@@ -1,13 +1,6 @@
 <?php
 
-/*
- * (c) Prezent Internet B.V. <info@prezent.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Prezent\Doctrine\Translatable\EventListener;
+namespace Hgabka\Doctrine\Translatable\EventListener;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\EventSubscriber;
@@ -21,10 +14,10 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\Query;
 use Metadata\Driver\DriverChain;
 use Metadata\MetadataFactory;
-use Prezent\Doctrine\Translatable\Mapping\TranslatableMetadata;
-use Prezent\Doctrine\Translatable\Mapping\TranslationMetadata;
-use Prezent\Doctrine\Translatable\TranslatableInterface;
-use Prezent\Doctrine\Translatable\TranslationInterface;
+use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
+use Hgabka\Doctrine\Translatable\TranslatableInterface;
+use Hgabka\Doctrine\Translatable\TranslationInterface;
 
 /**
  * Load translations on demand
@@ -143,11 +136,11 @@ class TranslatableListener implements EventSubscriber
             return;
         }
 
-        if ($reflClass->implementsInterface('Prezent\Doctrine\Translatable\TranslatableInterface')) {
+        if ($reflClass->implementsInterface('Hgabka\Doctrine\Translatable\TranslatableInterface')) {
             $this->mapTranslatable($classMetadata);
         }
 
-        if ($reflClass->implementsInterface('Prezent\Doctrine\Translatable\TranslationInterface')) {
+        if ($reflClass->implementsInterface('Hgabka\Doctrine\Translatable\TranslationInterface')) {
             $this->mapTranslation($classMetadata);
         }
     }
@@ -300,16 +293,17 @@ class TranslatableListener implements EventSubscriber
     public function postLoad(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
+        
         $class = $args->getEntityManager()->getClassMetadata(get_class($entity))->getName(); // Resolve proxy class
         $metadata = $this->getTranslatableMetadata($class);
 
         if ($metadata instanceof TranslatableMetadata) {
             if ($metadata->fallbackLocale) {
-                $this->setReflectionPropertyValue($entity, 'fallbackLocale', $this->getFallbackLocale());
+                $this->setReflectionPropertyValue($entity, $class, 'fallbackLocale', $this->getFallbackLocale());
             }
 
             if ($metadata->currentLocale) {
-                $this->setReflectionPropertyValue($entity, 'currentLocale', $this->getCurrentLocale());
+                $this->setReflectionPropertyValue($entity, $class, 'currentLocale', $this->getCurrentLocale());
             }
         }
     }
@@ -319,9 +313,9 @@ class TranslatableListener implements EventSubscriber
      * @param string $property
      * @param mixed $value
      */
-    private function setReflectionPropertyValue($object, string $property, $value): void
+    private function setReflectionPropertyValue($object, $class, string $property, $value): void
     {
-        $reflection = new \ReflectionProperty(get_class($object), $property);
+        $reflection = new \ReflectionProperty($class, $property);
         $reflection->setAccessible(true);
         $reflection->setValue($object, $value);
     }
