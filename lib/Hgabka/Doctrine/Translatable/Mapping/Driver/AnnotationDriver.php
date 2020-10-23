@@ -1,24 +1,17 @@
 <?php
 
-/*
- * (c) Prezent Internet B.V. <info@prezent.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Prezent\Doctrine\Translatable\Mapping\Driver;
+namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
 use Metadata\ClassMetadata;
 use Metadata\Driver\DriverInterface;
-use Prezent\Doctrine\Translatable\Annotation\CurrentTranslation;
-use Prezent\Doctrine\Translatable\Annotation\FallbackTranslation;
-use Prezent\Doctrine\Translatable\Annotation\Translations;
-use Prezent\Doctrine\Translatable\Mapping\PropertyMetadata;
-use Prezent\Doctrine\Translatable\Mapping\TranslatableMetadata;
-use Prezent\Doctrine\Translatable\Mapping\TranslationMetadata;
+use Hgabka\Doctrine\Translatable\Annotation\CurrentTranslation;
+use Hgabka\Doctrine\Translatable\Annotation\FallbackTranslation;
+use Hgabka\Doctrine\Translatable\Annotation\Translations;
+use Hgabka\Doctrine\Translatable\Mapping\PropertyMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 
 /**
  * Load translation metadata from annotations
@@ -46,11 +39,11 @@ class AnnotationDriver implements DriverInterface
      */
     public function loadMetadataForClass(\ReflectionClass $class): ?ClassMetadata
     {
-        if ($class->implementsInterface('Prezent\\Doctrine\\Translatable\\TranslatableInterface')) {
+        if ($class->implementsInterface('Hgabka\\Doctrine\\Translatable\\TranslatableInterface')) {
             return $this->loadTranslatableMetadata($class);
         }
 
-        if ($class->implementsInterface('Prezent\\Doctrine\\Translatable\\TranslationInterface')) {
+        if ($class->implementsInterface('Hgabka\\Doctrine\\Translatable\\TranslationInterface')) {
             return $this->loadTranslationMetadata($class);
         }
 
@@ -74,17 +67,17 @@ class AnnotationDriver implements DriverInterface
             $propertyMetadata = new PropertyMetadata($class->name, $property->getName());
             $targetEntity = $class->name . 'Translation';
 
-            if ($this->reader->getPropertyAnnotation($property, 'Prezent\\Doctrine\\Translatable\\Annotation\\CurrentLocale')) {
+            if ($this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\CurrentLocale')) {
                 $classMetadata->currentLocale = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }
 
-            if ($this->reader->getPropertyAnnotation($property, 'Prezent\\Doctrine\\Translatable\\Annotation\\FallbackLocale')) {
+            if ($this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\FallbackLocale')) {
                 $classMetadata->fallbackLocale = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }
 
-            if ($annot = $this->reader->getPropertyAnnotation($property, 'Prezent\\Doctrine\\Translatable\\Annotation\\Translations')) {
+            if ($annot = $this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\Translations')) {
                 $classMetadata->targetEntity = $annot->targetEntity ?? $targetEntity;
                 $classMetadata->translations = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
@@ -112,14 +105,14 @@ class AnnotationDriver implements DriverInterface
             $propertyMetadata = new PropertyMetadata($class->name, $property->getName());
             $targetEntity = 'Translation' === substr($class->name, -11) ? substr($class->name, 0, -11) : null;
 
-            if ($annot = $this->reader->getPropertyAnnotation($property, 'Prezent\\Doctrine\\Translatable\\Annotation\\Translatable')) {
+            if ($annot = $this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\Translatable')) {
                 $classMetadata->targetEntity = $annot->targetEntity ?? $targetEntity;
                 $classMetadata->referencedColumnName = $annot->referencedColumnName;
                 $classMetadata->translatable = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }
 
-            if ($this->reader->getPropertyAnnotation($property, 'Prezent\\Doctrine\\Translatable\\Annotation\\Locale')) {
+            if ($this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\Locale')) {
                 $classMetadata->locale = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }
