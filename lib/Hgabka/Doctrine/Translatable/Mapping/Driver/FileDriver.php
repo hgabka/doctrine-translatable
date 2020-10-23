@@ -1,20 +1,13 @@
 <?php
 
-/*
- * (c) Prezent Internet B.V. <info@prezent.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Prezent\Doctrine\Translatable\Mapping\Driver;
+namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Common\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Metadata\ClassMetadata;
 use Metadata\Driver\DriverInterface;
-use Prezent\Doctrine\Translatable\Mapping\TranslatableMetadata;
-use Prezent\Doctrine\Translatable\Mapping\TranslationMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
+use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 
 /**
  * FileDriver provides the base methods to read mapping information from a file.
@@ -39,11 +32,11 @@ abstract class FileDriver implements DriverInterface
      */
     public function loadMetadataForClass(\ReflectionClass $class): ?ClassMetadata
     {
-        if ($class->implementsInterface('Prezent\\Doctrine\\Translatable\\TranslatableInterface')) {
+        if ($class->implementsInterface('Hgabka\\Doctrine\\Translatable\\TranslatableInterface')) {
             return $this->loadTranslatableMetadata($class->name, $this->readMapping($class->name));
         }
 
-        if ($class->implementsInterface('Prezent\\Doctrine\\Translatable\\TranslationInterface')) {
+        if ($class->implementsInterface('Hgabka\\Doctrine\\Translatable\\TranslationInterface')) {
             return $this->loadTranslationMetadata($class->name, $this->readMapping($class->name));
         }
 
