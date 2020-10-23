@@ -1,18 +1,11 @@
 <?php
 
-/*
- * (c) Prezent Internet B.V. <info@prezent.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Prezent\Doctrine\Translatable\Entity;
+namespace Hgabka\Doctrine\Translatable\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Prezent\Doctrine\Translatable\Annotation as Prezent;
-use Prezent\Doctrine\Translatable\TranslatableInterface;
-use Prezent\Doctrine\Translatable\TranslationInterface;
+use Hgabka\Doctrine\Translatable\Annotation as Hgabka;
+use Hgabka\Doctrine\Translatable\TranslatableInterface;
+use Hgabka\Doctrine\Translatable\TranslationInterface;
 
 /**
  * @ORM\MappedSuperclass
