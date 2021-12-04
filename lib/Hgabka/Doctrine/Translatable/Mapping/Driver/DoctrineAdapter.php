@@ -2,11 +2,12 @@
 
 namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
+use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver as BundleMappingDriver;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Bundle\DoctrineBundle\Mapping\Driver\AnnotationDriver as DoctrineAnnotationDriver;
-use Doctrine\Bundle\DoctrineBundle\Mapping\Driver\FileDriver as DoctrineFileDriver;
-use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver;
-use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriverChain;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver as DoctrineAnnotationDriver;
+use Doctrine\ORM\Mapping\Driver\FileDriver as DoctrineFileDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
@@ -46,18 +47,23 @@ class DoctrineAdapter
         return self::fromMetadataDriver($om->getConfiguration()->getMetadataDriverImpl());
     }
 
+     public static function fromMetadataDriver(BundleMappingDriver $omDriver)
+	 {
+		 return self::getFromMetadataDriver($omDriver->getDriver());
+	 }
+	 
     /**
      * Create a driver from a Doctrine metadata driver
      *
      * @param MappingDriver $omDriver
      * @return DriverInterface
      */
-    public static function fromMetadataDriver(MappingDriver $omDriver)
+    public static function getFromMetadataDriver(MappingDriver $omDriver)
     {
         if ($omDriver instanceof MappingDriverChain) {
             $drivers = array();
             foreach ($omDriver->getDrivers() as $nestedOmDriver) {
-                $drivers[] = self::fromMetadataDriver($nestedOmDriver);
+                $drivers[] = self::getFromMetadataDriver($nestedOmDriver);
             }
 
             return new DriverChain($drivers);
