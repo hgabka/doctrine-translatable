@@ -2,22 +2,15 @@
 
 namespace Hgabka\Doctrine\Translatable\EventListener;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Doctrine\ORM\Query;
-use Metadata\Driver\DriverChain;
-use Metadata\MetadataFactory;
 use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
-use Hgabka\Doctrine\Translatable\TranslatableInterface;
-use Hgabka\Doctrine\Translatable\TranslationInterface;
+use Metadata\MetadataFactory;
 
 /**
  * Load translations on demand
@@ -44,7 +37,7 @@ class TranslatableListener implements EventSubscriber
     /**
      * @var array
      */
-    private $cache = array();
+    private $cache = [];
 
     /**
      * Constructor
@@ -70,11 +63,13 @@ class TranslatableListener implements EventSubscriber
      * Set the current locale
      *
      * @param string $currentLocale
+     *
      * @return self
      */
     public function setCurrentLocale($currentLocale)
     {
         $this->currentLocale = $currentLocale;
+
         return $this;
     }
 
@@ -92,11 +87,13 @@ class TranslatableListener implements EventSubscriber
      * Set the fallback locale
      *
      * @param string $fallbackLocale
+     *
      * @return self
      */
     public function setFallbackLocale($fallbackLocale)
     {
         $this->fallbackLocale = $fallbackLocale;
+
         return $this;
     }
 
@@ -115,16 +112,17 @@ class TranslatableListener implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::loadClassMetadata,
             Events::postLoad,
-        );
+        ];
     }
 
     /**
      * Add mapping to translatable entities
      *
      * @param LoadClassMetadataEventArgs $eventArgs
+     *
      * @return void
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
@@ -146,98 +144,10 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * Add mapping data to a translatable entity
-     *
-     * @param ClassMetadata $mapping
-     * @return void
-     */
-    private function mapTranslatable(ClassMetadata $mapping)
-    {
-        $metadata = $this->getTranslatableMetadata($mapping->name);
-
-        if ($metadata->targetEntity
-            && $metadata->translations
-            && !$mapping->hasAssociation($metadata->translations->name)
-        ) {
-            $targetMetadata = $this->getTranslatableMetadata($metadata->targetEntity);
-
-            $mapping->mapOneToMany(array(
-                'fieldName'     => $metadata->translations->name,
-                'targetEntity'  => $metadata->targetEntity,
-                'mappedBy'      => $targetMetadata->translatable->name,
-                'fetch'         => ClassMetadataInfo::FETCH_EXTRA_LAZY,
-                'indexBy'       => $targetMetadata->locale->name,
-                'cascade'       => array('persist', 'merge', 'remove'),
-                'orphanRemoval' => true,
-            ));
-        }
-    }
-
-    /**
-     * Add mapping data to a translation entity
-     *
-     * @param ClassMetadata $mapping
-     * @return void
-     */
-    private function mapTranslation(ClassMetadata $mapping)
-    {
-        $metadata = $this->getTranslatableMetadata($mapping->name);
-
-        // Map translatable relation
-        if ($metadata->targetEntity
-            && $metadata->translatable
-            && !$mapping->hasAssociation($metadata->translatable->name)
-        ) {
-            $targetMetadata = $this->getTranslatableMetadata($metadata->targetEntity);
-
-            $mapping->mapManyToOne(array(
-                'fieldName'    => $metadata->translatable->name,
-                'targetEntity' => $metadata->targetEntity,
-                'inversedBy'   => $targetMetadata->translations->name,
-                'joinColumns'  => array(array(
-                    'name'                 => 'translatable_id',
-                    'referencedColumnName' => $metadata->referencedColumnName,
-                    'onDelete'             => 'CASCADE',
-                    'nullable'             => false,
-                )),
-            ));
-        }
-
-        if (!$metadata->translatable) {
-            return;
-        }
-
-        // Map locale field
-        if (!$mapping->hasField($metadata->locale->name)) {
-            $mapping->mapField(array(
-                'fieldName' => $metadata->locale->name,
-                'type' => 'string',
-                'length' => 5,
-            ));
-        }
-
-        // Map unique index
-        $columns = array(
-            $mapping->getSingleAssociationJoinColumnName($metadata->translatable->name),
-            $metadata->locale->name,
-        );
-
-        if (!$this->hasUniqueConstraint($mapping, $columns)) {
-            $constraints = isset($mapping->table['uniqueConstraints']) ? $mapping->table['uniqueConstraints']: array();
-            $constraints[$mapping->getTableName() . '_uniq_trans'] = array(
-                'columns' => $columns,
-            );
-
-            $mapping->setPrimaryTable(array(
-                'uniqueConstraints' => $constraints,
-            ));
-        }
-    }
-
-    /**
      * Get translatable metadata
      *
      * @param string $className
+     *
      * @return TranslatableMetadata|TranslationMetadata
      */
     public function getTranslatableMetadata($className)
@@ -255,14 +165,132 @@ class TranslatableListener implements EventSubscriber
         }
 
         $this->cache[$className] = $metadata;
+
         return $metadata;
+    }
+
+    /**
+     * Load translations
+     *
+     * @param LifecycleEventArgs $args
+     *
+     * @return void
+     */
+    public function postLoad(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
+
+        $class = $args->getEntityManager()->getClassMetadata(get_class($entity))->getName(); // Resolve proxy class
+        $metadata = $this->getTranslatableMetadata($class);
+
+        if ($metadata instanceof TranslatableMetadata) {
+            if ($metadata->fallbackLocale) {
+                $this->setReflectionPropertyValue($entity, $class, 'fallbackLocale', $this->getFallbackLocale());
+            }
+
+            if ($metadata->currentLocale) {
+                $this->setReflectionPropertyValue($entity, $class, 'currentLocale', $this->getCurrentLocale());
+            }
+        }
+    }
+
+    /**
+     * Add mapping data to a translatable entity
+     *
+     * @param ClassMetadata $mapping
+     *
+     * @return void
+     */
+    private function mapTranslatable(ClassMetadata $mapping)
+    {
+        $metadata = $this->getTranslatableMetadata($mapping->name);
+
+        if ($metadata->targetEntity
+            && $metadata->translations
+            && !$mapping->hasAssociation($metadata->translations->name)
+        ) {
+            $targetMetadata = $this->getTranslatableMetadata($metadata->targetEntity);
+
+            $mapping->mapOneToMany([
+                'fieldName'     => $metadata->translations->name,
+                'targetEntity'  => $metadata->targetEntity,
+                'mappedBy'      => $targetMetadata->translatable->name,
+                'fetch'         => ClassMetadataInfo::FETCH_EXTRA_LAZY,
+                'indexBy'       => $targetMetadata->locale->name,
+                'cascade'       => ['persist', 'merge', 'remove'],
+                'orphanRemoval' => true,
+            ]);
+        }
+    }
+
+    /**
+     * Add mapping data to a translation entity
+     *
+     * @param ClassMetadata $mapping
+     *
+     * @return void
+     */
+    private function mapTranslation(ClassMetadata $mapping)
+    {
+        $metadata = $this->getTranslatableMetadata($mapping->name);
+
+        // Map translatable relation
+        if ($metadata->targetEntity
+            && $metadata->translatable
+            && !$mapping->hasAssociation($metadata->translatable->name)
+        ) {
+            $targetMetadata = $this->getTranslatableMetadata($metadata->targetEntity);
+
+            $mapping->mapManyToOne([
+                'fieldName'    => $metadata->translatable->name,
+                'targetEntity' => $metadata->targetEntity,
+                'inversedBy'   => $targetMetadata->translations->name,
+                'joinColumns'  => [[
+                    'name'                 => 'translatable_id',
+                    'referencedColumnName' => $metadata->referencedColumnName,
+                    'onDelete'             => 'CASCADE',
+                    'nullable'             => false,
+                ]],
+            ]);
+        }
+
+        if (!$metadata->translatable) {
+            return;
+        }
+
+        // Map locale field
+        if (!$mapping->hasField($metadata->locale->name)) {
+            $mapping->mapField([
+                'fieldName' => $metadata->locale->name,
+                'type' => 'string',
+                'length' => 5,
+            ]);
+        }
+
+        // Map unique index
+        $columns = [
+            $mapping->getSingleAssociationJoinColumnName($metadata->translatable->name),
+            $metadata->locale->name,
+        ];
+
+        if (!$this->hasUniqueConstraint($mapping, $columns)) {
+            $constraints = $mapping->table['uniqueConstraints'] ?? [];
+            $constraints[$mapping->getTableName() . '_uniq_trans'] = [
+                'columns' => $columns,
+            ];
+
+            $mapping->setPrimaryTable([
+                'uniqueConstraints' => $constraints,
+            ]);
+        }
     }
 
     /**
      * Check if an unique constraint has been defined
      *
      * @param ClassMetadata $mapping
-     * @param array $columns
+     * @param array         $columns
+     *
      * @return bool
      */
     private function hasUniqueConstraint(ClassMetadata $mapping, array $columns)
@@ -285,33 +313,10 @@ class TranslatableListener implements EventSubscriber
     }
 
     /**
-     * Load translations
-     *
-     * @param LifecycleEventArgs $args
-     * @return void
-     */
-    public function postLoad(LifecycleEventArgs $args)
-    {
-        $entity = $args->getEntity();
-        
-        $class = $args->getEntityManager()->getClassMetadata(get_class($entity))->getName(); // Resolve proxy class
-        $metadata = $this->getTranslatableMetadata($class);
-
-        if ($metadata instanceof TranslatableMetadata) {
-            if ($metadata->fallbackLocale) {
-                $this->setReflectionPropertyValue($entity, $class, 'fallbackLocale', $this->getFallbackLocale());
-            }
-
-            if ($metadata->currentLocale) {
-                $this->setReflectionPropertyValue($entity, $class, 'currentLocale', $this->getCurrentLocale());
-            }
-        }
-    }
-
-    /**
      * @param object $object
      * @param string $property
-     * @param mixed $value
+     * @param mixed  $value
+     * @param mixed  $class
      */
     private function setReflectionPropertyValue($object, $class, string $property, $value): void
     {

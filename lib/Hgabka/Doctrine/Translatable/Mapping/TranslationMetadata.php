@@ -89,13 +89,13 @@ class TranslationMetadata extends MergeableClassMetadata
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->targetEntity,
             $this->referencedColumnName,
             $this->translatable ? $this->translatable->name : null,
-            $this->locale       ? $this->locale->name       : null,
+            $this->locale ? $this->locale->name : null,
             parent::serialize(),
-        ));
+        ]);
     }
 
     /**
@@ -103,13 +103,13 @@ class TranslationMetadata extends MergeableClassMetadata
      */
     public function unserialize($str)
     {
-        list (
+        [
             $this->targetEntity,
             $this->referencedColumnName,
             $translatable,
             $locale,
             $parent
-        ) = unserialize($str);
+        ] = unserialize($str);
 
         parent::unserialize($parent);
 

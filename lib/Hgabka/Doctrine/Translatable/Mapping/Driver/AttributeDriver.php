@@ -19,7 +19,7 @@ class AttributeDriver implements DriverInterface
     /**
      * Constructor
      *
-     * @param AttributeReader $reader
+     * @param AttributeReader      $reader
      * @param ClassMetadataFactory $factory Doctrine's metadata factory
      */
     public function __construct(AttributeReader $reader)
@@ -47,6 +47,7 @@ class AttributeDriver implements DriverInterface
      * Load metadata for a translatable class
      *
      * @param \ReflectionClass $class
+     *
      * @return TranslatableMetadata
      */
     private function loadTranslatableMetadata(\ReflectionClass $class)
@@ -85,6 +86,7 @@ class AttributeDriver implements DriverInterface
      * Load metadata for a translation class
      *
      * @param \ReflectionClass $class
+     *
      * @return TranslationMetadata
      */
     private function loadTranslationMetadata(\ReflectionClass $class)
@@ -114,5 +116,4 @@ class AttributeDriver implements DriverInterface
 
         return $classMetadata;
     }
-
 }

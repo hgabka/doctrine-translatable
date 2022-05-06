@@ -2,8 +2,6 @@
 
 namespace Hgabka\Doctrine\Translatable\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Hgabka\Doctrine\Translatable\Annotation as Hgabka;
 use Hgabka\Doctrine\Translatable\TranslationInterface;
 
 trait TranslatableTrait
@@ -17,11 +15,12 @@ trait TranslatableTrait
     {
         return $this->translations;
     }
-    
+
     /**
      * Add a translation
      *
      * @param TranslationInterface $translation
+     *
      * @return self
      */
     public function addTranslation(TranslationInterface $translation)
@@ -30,14 +29,15 @@ trait TranslatableTrait
             $this->translations[$translation->getLocale()] = $translation;
             $translation->setTranslatable($this);
         }
-    
+
         return $this;
     }
-    
+
     /**
      * Remove a translation
      *
      * @param TranslationInterface $translation
+     *
      * @return self
      */
     public function removeTranslation(TranslationInterface $translation)
@@ -45,7 +45,7 @@ trait TranslatableTrait
         if ($this->translations->removeElement($translation)) {
             $translation->setTranslatable(null);
         }
-    
+
         return $this;
     }
 }

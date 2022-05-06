@@ -2,13 +2,10 @@
 
 namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
-use Doctrine\Common\Persistence\Mapping\Driver\FileDriver as DoctrineFileDriver;
-use Doctrine\ORM\Mapping\Driver\XmlDriver as ORMXmlDriver;
 use Hgabka\Doctrine\Translatable\Mapping\PropertyMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 use SimpleXMLElement;
-
 
 /**
  * @author Gonzalo Vilaseca <gvilaseca@reiss.co.uk>
@@ -22,7 +19,8 @@ class XmlDriver extends FileDriver
      * @param mixed  $config
      *
      * @throws \Exception
-     * @return TranslatableMetadata|null
+     *
+     * @return null|TranslatableMetadata
      */
     protected function loadTranslatableMetadata($className, $config)
     {
@@ -35,19 +33,19 @@ class XmlDriver extends FileDriver
         $xml->registerXPathNamespace('hgabka', 'hgabka');
 
         $nodeList = $xml->xpath('//hgabka:translatable');
-        if (0 == count($nodeList)) {
+        if (0 === count($nodeList)) {
             return;
         }
 
         if (1 < count($nodeList)) {
-            throw new \Exception("Configuration defined twice");
+            throw new \Exception('Configuration defined twice');
         }
 
         $node = $nodeList[0];
 
         $classMetadata = new TranslatableMetadata($className);
 
-        $translatableField = (string)$node['field'];
+        $translatableField = (string) $node['field'];
 
         $propertyMetadata = new PropertyMetadata(
             $className,
@@ -58,12 +56,12 @@ class XmlDriver extends FileDriver
         // default targetEntity
         $targetEntity = $className . 'Translation';
 
-        $translatableTargetEntity    = (string)$node['target-entity'];
+        $translatableTargetEntity    = (string) $node['target-entity'];
         $classMetadata->targetEntity = !empty($translatableTargetEntity) ? $translatableTargetEntity : $targetEntity;
         $classMetadata->translations = $propertyMetadata;
         $classMetadata->addPropertyMetadata($propertyMetadata);
 
-        $currentLocale = (string)$node['current-locale'];
+        $currentLocale = (string) $node['current-locale'];
         if (!empty($currentLocale)) {
             $propertyMetadata = new PropertyMetadata($className, $currentLocale);
 
@@ -71,7 +69,7 @@ class XmlDriver extends FileDriver
             $classMetadata->addPropertyMetadata($propertyMetadata);
         }
 
-        $fallbackLocale = (string)$node['fallback-locale'];
+        $fallbackLocale = (string) $node['fallback-locale'];
         if (!empty($fallbackLocale)) {
             $propertyMetadata = new PropertyMetadata($className, $fallbackLocale);
 
@@ -89,7 +87,8 @@ class XmlDriver extends FileDriver
      * @param mixed  $config
      *
      * @throws \Exception
-     * @return TranslationMetadata|null
+     *
+     * @return null|TranslationMetadata
      */
     protected function loadTranslationMetadata($className, $config)
     {
@@ -101,12 +100,12 @@ class XmlDriver extends FileDriver
         $xml->registerXPathNamespace('hgabka', 'hgabka');
         $nodeList = $xml->xpath('//hgabka:translatable');
 
-        if (0 == count($nodeList)) {
+        if (0 === count($nodeList)) {
             return;
         }
 
         if (1 < count($nodeList)) {
-            throw new \Exception("Configuration defined twice");
+            throw new \Exception('Configuration defined twice');
         }
 
         $nodeTranslatable = $nodeList[0];

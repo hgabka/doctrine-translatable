@@ -4,10 +4,10 @@ namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Common\Persistence\Mapping\Driver\FileLocator;
 use Doctrine\Common\Persistence\Mapping\MappingException;
-use Metadata\ClassMetadata;
-use Metadata\Driver\DriverInterface;
 use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
+use Metadata\ClassMetadata;
+use Metadata\Driver\DriverInterface;
 
 /**
  * FileDriver provides the base methods to read mapping information from a file.
@@ -28,6 +28,7 @@ abstract class FileDriver implements DriverInterface
 
     /**
      * @param \ReflectionClass $class
+     *
      * @return \Metadata\ClassMetadata
      */
     public function loadMetadataForClass(\ReflectionClass $class): ?ClassMetadata
@@ -47,7 +48,8 @@ abstract class FileDriver implements DriverInterface
      * Returns the mapping filename for the given classname.
      *
      * @param string $className
-     * @return string|null
+     *
+     * @return null|string
      */
     protected function getMappingFile($className)
     {
@@ -63,8 +65,9 @@ abstract class FileDriver implements DriverInterface
      * Load metadata for a translatable class
      *
      * @param string $className
-     * @param mixed $config
-     * @return TranslatableMetadata|null
+     * @param mixed  $config
+     *
+     * @return null|TranslatableMetadata
      */
     abstract protected function loadTranslatableMetadata($className, $config);
 
@@ -72,14 +75,17 @@ abstract class FileDriver implements DriverInterface
      * Load metadata for a translation class
      *
      * @param string $className
-     * @param mixed $config
-     * @return TranslationMetadata|null
+     * @param mixed  $config
+     *
+     * @return null|TranslationMetadata
      */
     abstract protected function loadTranslationMetadata($className, $config);
 
     /**
      * Parses the given mapping file.
+     *
      * @param string $file
+     *
      * @return mixed
      */
     abstract protected function parse($file);
@@ -88,7 +94,8 @@ abstract class FileDriver implements DriverInterface
      * Reads the configuration for the given classname.
      *
      * @param string $className
-     * @return mixed|null
+     *
+     * @return null|mixed
      */
     private function readMapping($className)
     {

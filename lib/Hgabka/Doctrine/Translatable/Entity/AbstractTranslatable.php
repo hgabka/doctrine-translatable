@@ -3,7 +3,6 @@
 namespace Hgabka\Doctrine\Translatable\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Hgabka\Doctrine\Translatable\Annotation as Hgabka;
 use Hgabka\Doctrine\Translatable\TranslatableInterface;
 use Hgabka\Doctrine\Translatable\TranslationInterface;
 
@@ -35,11 +34,12 @@ abstract class AbstractTranslatable implements TranslatableInterface
     {
         return $this->translations;
     }
-    
+
     /**
      * Add a translation
      *
      * @param TranslationInterface $translation
+     *
      * @return self
      */
     public function addTranslation(TranslationInterface $translation)
@@ -48,14 +48,15 @@ abstract class AbstractTranslatable implements TranslatableInterface
             $this->translations[$translation->getLocale()] = $translation;
             $translation->setTranslatable($this);
         }
-    
+
         return $this;
     }
-    
+
     /**
      * Remove a translation
      *
      * @param TranslationInterface $translation
+     *
      * @return self
      */
     public function removeTranslation(TranslationInterface $translation)
@@ -63,7 +64,7 @@ abstract class AbstractTranslatable implements TranslatableInterface
         if ($this->translations->removeElement($translation)) {
             $translation->setTranslatable(null);
         }
-    
+
         return $this;
     }
 }

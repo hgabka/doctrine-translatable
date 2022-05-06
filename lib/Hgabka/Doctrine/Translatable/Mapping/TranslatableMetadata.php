@@ -81,13 +81,13 @@ class TranslatableMetadata extends MergeableClassMetadata
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->targetEntity,
-            $this->currentLocale  ? $this->currentLocale->name  : null,
+            $this->currentLocale ? $this->currentLocale->name : null,
             $this->fallbackLocale ? $this->fallbackLocale->name : null,
-            $this->translations   ? $this->translations->name        : null,
+            $this->translations ? $this->translations->name : null,
             parent::serialize(),
-        ));
+        ]);
     }
 
     /**
@@ -95,13 +95,13 @@ class TranslatableMetadata extends MergeableClassMetadata
      */
     public function unserialize($str)
     {
-        list (
+        [
             $this->targetEntity,
             $currentLocale,
             $fallbackLocale,
             $translations,
             $parent
-        ) = unserialize($str);
+        ] = unserialize($str);
 
         parent::unserialize($parent);
 

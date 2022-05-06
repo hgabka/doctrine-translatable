@@ -4,20 +4,19 @@ namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver as BundleMappingDriver;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver as DoctrineAnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver as DoctrineAttributeDriver;
 use Doctrine\ORM\Mapping\Driver\FileDriver as DoctrineFileDriver;
-use Doctrine\Persistence\Mapping\Driver\MappingDriver;
-use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Metadata\Driver\DriverChain;
 use Metadata\Driver\DriverInterface;
 
 /**
  * Adapt a Doctrine metadata driver
- *
  */
 class DoctrineAdapter
 {
@@ -25,11 +24,12 @@ class DoctrineAdapter
      * Create a driver from a Doctrine registry
      *
      * @param ManagerRegistry $registry
+     *
      * @return DriverInterface
      */
     public static function fromRegistry(ManagerRegistry $registry)
     {
-        $drivers = array();
+        $drivers = [];
         foreach ($registry->getManagers() as $manager) {
             $drivers[] = self::fromManager($manager);
         }
@@ -41,6 +41,7 @@ class DoctrineAdapter
      * Create a driver from a Doctrine object manager
      *
      * @param ObjectManager $om
+     *
      * @return DriverInterface
      */
     public static function fromManager(ObjectManager $om)
@@ -48,21 +49,22 @@ class DoctrineAdapter
         return self::fromMetadataDriver($om->getConfiguration()->getMetadataDriverImpl());
     }
 
-     public static function fromMetadataDriver(BundleMappingDriver $omDriver)
-	 {
-		 return self::getFromMetadataDriver($omDriver->getDriver());
-	 }
-	 
+    public static function fromMetadataDriver(BundleMappingDriver $omDriver)
+    {
+        return self::getFromMetadataDriver($omDriver->getDriver());
+    }
+
     /**
      * Create a driver from a Doctrine metadata driver
      *
      * @param MappingDriver $omDriver
+     *
      * @return DriverInterface
      */
     public static function getFromMetadataDriver(MappingDriver $omDriver)
     {
         if ($omDriver instanceof MappingDriverChain) {
-            $drivers = array();
+            $drivers = [];
             foreach ($omDriver->getDrivers() as $nestedOmDriver) {
                 $drivers[] = self::getFromMetadataDriver($nestedOmDriver);
             }
