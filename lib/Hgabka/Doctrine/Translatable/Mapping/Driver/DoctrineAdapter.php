@@ -5,6 +5,7 @@ namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver as BundleMappingDriver;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver as DoctrineAnnotationDriver;
+use Doctrine\ORM\Mapping\Driver\AttributeDriver as DoctrineAttributeDriver;
 use Doctrine\ORM\Mapping\Driver\FileDriver as DoctrineFileDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
@@ -71,6 +72,10 @@ class DoctrineAdapter
 
         if ($omDriver instanceof DoctrineAnnotationDriver) {
             return new AnnotationDriver($omDriver->getReader());
+        }
+
+        if ($omDriver instanceof DoctrineAttributeDriver) {
+            return new AttributeDriver($omDriver->getReader());
         }
 
         if ($omDriver instanceof DoctrineFileDriver) {
