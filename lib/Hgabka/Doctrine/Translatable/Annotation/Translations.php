@@ -2,6 +2,8 @@
 
 namespace Hgabka\Doctrine\Translatable\Annotation;
 
+use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
+
 /**
  * Translations annotation
  *
@@ -10,10 +12,10 @@ namespace Hgabka\Doctrine\Translatable\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
-class Translations
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
+class Translations implements NamedArgumentConstructorAnnotation
 {
-    /**
-     * @var string
-     */
-    public $targetEntity;
+    public function __construct(public ?string $targetEntity)
+    {
+    }
 }

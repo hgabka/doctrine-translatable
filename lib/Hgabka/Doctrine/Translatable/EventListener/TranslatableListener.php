@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
+use Hgabka\Doctrine\Translatable\TranslatableInterface;
+use Hgabka\Doctrine\Translatable\TranslationInterface;
 use Metadata\MetadataFactory;
 
 /**
@@ -134,11 +136,11 @@ class TranslatableListener implements EventSubscriber
             return;
         }
 
-        if ($reflClass->implementsInterface('Hgabka\Doctrine\Translatable\TranslatableInterface')) {
+        if ($reflClass->implementsInterface(TranslatableInterface::class)) {
             $this->mapTranslatable($classMetadata);
         }
 
-        if ($reflClass->implementsInterface('Hgabka\Doctrine\Translatable\TranslationInterface')) {
+        if ($reflClass->implementsInterface(TranslationInterface::class)) {
             $this->mapTranslation($classMetadata);
         }
     }

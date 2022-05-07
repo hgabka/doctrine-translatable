@@ -2,6 +2,8 @@
 
 namespace Hgabka\Doctrine\Translatable\Annotation;
 
+use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
+
 /**
  * Translatable annotation
  *
@@ -10,15 +12,10 @@ namespace Hgabka\Doctrine\Translatable\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
-class Translatable
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
+class Translatable implements NamedArgumentConstructorAnnotation
 {
-    /**
-     * @var string
-     */
-    public $targetEntity;
-
-    /**
-     * @var string
-     */
-    public $referencedColumnName = 'id';
+    public function __construct(public ?string $targetEntity = null, public ?string $referencedColumnName = 'id')
+    {
+    }
 }

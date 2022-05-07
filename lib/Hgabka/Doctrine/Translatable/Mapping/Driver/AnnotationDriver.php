@@ -4,9 +4,16 @@ namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
+use Hgabka\Doctrine\Translatable\Annotation\CurrentLocale;
+use Hgabka\Doctrine\Translatable\Annotation\FallbackLocale;
+use Hgabka\Doctrine\Translatable\Annotation\Locale;
+use Hgabka\Doctrine\Translatable\Annotation\Translatable;
+use Hgabka\Doctrine\Translatable\Annotation\Translations;
 use Hgabka\Doctrine\Translatable\Mapping\PropertyMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
+use Hgabka\Doctrine\Translatable\TranslatableInterface;
+use Hgabka\Doctrine\Translatable\TranslationInterface;
 use Metadata\ClassMetadata;
 use Metadata\Driver\DriverInterface;
 
@@ -36,11 +43,11 @@ class AnnotationDriver implements DriverInterface
      */
     public function loadMetadataForClass(\ReflectionClass $class): ?ClassMetadata
     {
-        if ($class->implementsInterface('Hgabka\\Doctrine\\Translatable\\TranslatableInterface')) {
+        if ($class->implementsInterface(TranslatableInterface::class)) {
             return $this->loadTranslatableMetadata($class);
         }
 
-        if ($class->implementsInterface('Hgabka\\Doctrine\\Translatable\\TranslationInterface')) {
+        if ($class->implementsInterface(TranslationInterface::class)) {
             return $this->loadTranslationMetadata($class);
         }
 
@@ -66,17 +73,17 @@ class AnnotationDriver implements DriverInterface
             $propertyMetadata = new PropertyMetadata($class->name, $property->getName());
             $targetEntity = $class->name . 'Translation';
 
-            if ($this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\CurrentLocale')) {
+            if ($this->reader->getPropertyAnnotation($property, CurrentLocale::class)) {
                 $classMetadata->currentLocale = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }
 
-            if ($this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\FallbackLocale')) {
+            if ($this->reader->getPropertyAnnotation($property, FallbackLocale::class)) {
                 $classMetadata->fallbackLocale = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }
 
-            if ($annot = $this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\Translations')) {
+            if ($annot = $this->reader->getPropertyAnnotation($property, Translations::class)) {
                 $classMetadata->targetEntity = $annot->targetEntity ?? $targetEntity;
                 $classMetadata->translations = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
@@ -105,14 +112,14 @@ class AnnotationDriver implements DriverInterface
             $propertyMetadata = new PropertyMetadata($class->name, $property->getName());
             $targetEntity = 'Translation' === substr($class->name, -11) ? substr($class->name, 0, -11) : null;
 
-            if ($annot = $this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\Translatable')) {
+            if ($annot = $this->reader->getPropertyAnnotation($property, Translatable::class)) {
                 $classMetadata->targetEntity = $annot->targetEntity ?? $targetEntity;
                 $classMetadata->referencedColumnName = $annot->referencedColumnName;
                 $classMetadata->translatable = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }
 
-            if ($this->reader->getPropertyAnnotation($property, 'Hgabka\\Doctrine\\Translatable\\Annotation\\Locale')) {
+            if ($this->reader->getPropertyAnnotation($property, Locale::class)) {
                 $classMetadata->locale = $propertyMetadata;
                 $classMetadata->addPropertyMetadata($propertyMetadata);
             }

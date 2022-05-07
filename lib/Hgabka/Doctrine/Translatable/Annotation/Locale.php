@@ -11,6 +11,7 @@ namespace Hgabka\Doctrine\Translatable\Annotation;
  * @Annotation
  * @Target("PROPERTY")
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 class Locale
 {
 }

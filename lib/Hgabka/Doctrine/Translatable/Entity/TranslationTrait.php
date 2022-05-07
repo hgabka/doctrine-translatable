@@ -13,20 +13,25 @@ trait TranslationTrait
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(name="id", type="integer")
      */
-    protected $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\Column(type: 'integer')]
+    protected ?int $id;
 
     /**
      * @ORM\Column(name="locale", type="string")
      * @Hgabka\Locale
      */
-    protected $locale;
+    #[ORM\Column(name: 'locale', type: 'string')]
+    #[Hgabka\Locale]
+    protected ?string $locale;
 
     /**
      * Get the ID
      *
      * @return int
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -36,7 +41,7 @@ trait TranslationTrait
      *
      * @return TranslatableInterface
      */
-    public function getTranslatable()
+    public function getTranslatable(): ?TranslatableInterface
     {
         return $this->translatable;
     }
@@ -48,7 +53,7 @@ trait TranslationTrait
      *
      * @return self
      */
-    public function setTranslatable(TranslatableInterface $translatable = null)
+    public function setTranslatable(?TranslatableInterface $translatable = null): self
     {
         if ($this->translatable === $translatable) {
             return $this;
@@ -73,7 +78,7 @@ trait TranslationTrait
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): ?string
     {
         return $this->locale;
     }
@@ -85,7 +90,7 @@ trait TranslationTrait
      *
      * @return self
      */
-    public function setLocale($locale)
+    public function setLocale(?string $locale): self
     {
         $this->locale = $locale;
 

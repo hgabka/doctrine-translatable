@@ -10,6 +10,7 @@ use Hgabka\Doctrine\Translatable\TranslationInterface;
 /**
  * @ORM\MappedSuperclass
  */
+#[ORM\MappedSuperclass]
 abstract class AbstractTranslation implements TranslationInterface
 {
     /**
@@ -19,14 +20,17 @@ abstract class AbstractTranslation implements TranslationInterface
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Column(name="id", type="integer")
      */
-    protected $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\Column(type: 'integer')]
+    protected ?int $id;
 
     /**
      * Translatable model
      *
      * Mapping provided by implementation
      */
-    protected $translatable;
+    protected ?TranslatableInterface $translatable;
 
     /**
      * Locale
@@ -34,14 +38,16 @@ abstract class AbstractTranslation implements TranslationInterface
      * @ORM\Column(name="locale", type="string")
      * @Hgabka\Locale
      */
-    protected $locale;
+    #[Hgabka\Locale]
+    #[ORM\Column(name: 'locale', type: 'string')]
+    protected ?string $locale;
 
     /**
      * Get the ID
      *
      * @return int
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -51,7 +57,7 @@ abstract class AbstractTranslation implements TranslationInterface
      *
      * @return TranslatableInterface
      */
-    public function getTranslatable()
+    public function getTranslatable(): ?TranslatableInterface
     {
         return $this->translatable;
     }
@@ -63,7 +69,7 @@ abstract class AbstractTranslation implements TranslationInterface
      *
      * @return self
      */
-    public function setTranslatable(TranslatableInterface $translatable = null)
+    public function setTranslatable(?TranslatableInterface $translatable = null): self
     {
         if ($this->translatable === $translatable) {
             return $this;
@@ -88,7 +94,7 @@ abstract class AbstractTranslation implements TranslationInterface
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): ?string
     {
         return $this->locale;
     }
@@ -100,7 +106,7 @@ abstract class AbstractTranslation implements TranslationInterface
      *
      * @return self
      */
-    public function setLocale($locale)
+    public function setLocale(?string $locale): self
     {
         $this->locale = $locale;
 
