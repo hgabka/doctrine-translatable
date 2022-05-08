@@ -2,6 +2,7 @@
 
 namespace Hgabka\Doctrine\Translatable\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Hgabka\Doctrine\Translatable\TranslatableInterface;
 use Hgabka\Doctrine\Translatable\TranslationInterface;
@@ -17,21 +18,21 @@ abstract class AbstractTranslatable implements TranslatableInterface
      *
      * Mapping provided by implementation
      */
-    protected $id;
+    protected ?int $id = null;
 
     /**
      * Translations
      *
      * Mapping provided by implementation
      */
-    protected $translations;
+    protected Collection|array|null $translations;
 
     /**
      * Get the translations
      *
      * @return ArrayCollection
      */
-    public function getTranslations()
+    public function getTranslations(): Collection|array|null
     {
         return $this->translations;
     }
@@ -43,7 +44,7 @@ abstract class AbstractTranslatable implements TranslatableInterface
      *
      * @return self
      */
-    public function addTranslation(TranslationInterface $translation)
+    public function addTranslation(TranslationInterface $translation): self
     {
         if (!$this->translations->contains($translation)) {
             $this->translations[$translation->getLocale()] = $translation;
@@ -60,7 +61,7 @@ abstract class AbstractTranslatable implements TranslatableInterface
      *
      * @return self
      */
-    public function removeTranslation(TranslationInterface $translation)
+    public function removeTranslation(TranslationInterface $translation): self
     {
         if ($this->translations->removeElement($translation)) {
             $translation->setTranslatable(null);

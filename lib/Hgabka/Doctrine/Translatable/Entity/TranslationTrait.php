@@ -16,7 +16,7 @@ trait TranslationTrait
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
-    protected ?int $id;
+    protected ?int $id = null;
 
     /**
      * @ORM\Column(name="locale", type="string")
@@ -24,7 +24,7 @@ trait TranslationTrait
      */
     #[ORM\Column(name: 'locale', type: 'string')]
     #[Hgabka\Locale]
-    protected ?string $locale;
+    protected ?string $locale = null;
 
     /**
      * Get the ID

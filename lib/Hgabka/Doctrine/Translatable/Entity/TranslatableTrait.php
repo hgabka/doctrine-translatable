@@ -2,6 +2,7 @@
 
 namespace Hgabka\Doctrine\Translatable\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Hgabka\Doctrine\Translatable\TranslationInterface;
 
 trait TranslatableTrait
@@ -11,7 +12,7 @@ trait TranslatableTrait
      *
      * @return ArrayCollection
      */
-    public function getTranslations()
+    public function getTranslations(): Collection|array|null
     {
         return $this->translations;
     }
@@ -23,7 +24,7 @@ trait TranslatableTrait
      *
      * @return self
      */
-    public function addTranslation(TranslationInterface $translation)
+    public function addTranslation(TranslationInterface $translation): self
     {
         if (!$this->translations->contains($translation)) {
             $this->translations[$translation->getLocale()] = $translation;
@@ -40,7 +41,7 @@ trait TranslatableTrait
      *
      * @return self
      */
-    public function removeTranslation(TranslationInterface $translation)
+    public function removeTranslation(TranslationInterface $translation): self
     {
         if ($this->translations->removeElement($translation)) {
             $translation->setTranslatable(null);

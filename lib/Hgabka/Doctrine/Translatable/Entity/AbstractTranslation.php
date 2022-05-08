@@ -23,14 +23,14 @@ abstract class AbstractTranslation implements TranslationInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: 'integer')]
-    protected ?int $id;
+    protected ?int $id = null;
 
     /**
      * Translatable model
      *
      * Mapping provided by implementation
      */
-    protected ?TranslatableInterface $translatable;
+    protected ?TranslatableInterface $translatable = null;
 
     /**
      * Locale
@@ -40,7 +40,7 @@ abstract class AbstractTranslation implements TranslationInterface
      */
     #[Hgabka\Locale]
     #[ORM\Column(name: 'locale', type: 'string')]
-    protected ?string $locale;
+    protected ?string $locale = null;
 
     /**
      * Get the ID
