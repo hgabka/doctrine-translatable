@@ -87,7 +87,7 @@ class TranslationMetadata extends MergeableClassMetadata
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([
             $this->targetEntity,
@@ -101,7 +101,7 @@ class TranslationMetadata extends MergeableClassMetadata
     /**
      * {@inheritdoc}
      */
-    public function unserialize($str)
+    public function unserialize($str): void
     {
         [
             $this->targetEntity,
