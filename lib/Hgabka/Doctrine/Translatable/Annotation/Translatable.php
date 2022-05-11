@@ -2,7 +2,7 @@
 
 namespace Hgabka\Doctrine\Translatable\Annotation;
 
-use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
  * Translatable annotation
