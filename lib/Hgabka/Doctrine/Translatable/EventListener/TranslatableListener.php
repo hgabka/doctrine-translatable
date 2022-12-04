@@ -41,7 +41,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @param MetadataFactory $factory
      */
-    public function __construct(private MetadataFactory $metadataFactory) {}
+    public function __construct(private readonly MetadataFactory $metadataFactory) {}
 
     /**
      * Get the current locale
