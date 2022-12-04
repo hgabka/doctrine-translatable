@@ -24,39 +24,31 @@ class TranslatableListener implements EventSubscriber
     /**
      * @var string Locale to use for translations
      */
-    private $currentLocale = 'en';
+    private string $currentLocale = 'en';
 
     /**
      * @var string Locale to use when the current locale is not available
      */
-    private $fallbackLocale = 'en';
-
-    /**
-     * @var MetadataFactory
-     */
-    private $metadataFactory;
+    private string $fallbackLocale = 'en';
 
     /**
      * @var array
      */
-    private $cache = [];
+    private array $cache = [];
 
     /**
      * Constructor
      *
      * @param MetadataFactory $factory
      */
-    public function __construct(MetadataFactory $factory)
-    {
-        $this->metadataFactory = $factory;
-    }
+    public function __construct(private MetadataFactory $factory) {}
 
     /**
      * Get the current locale
      *
      * @return string
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
         return $this->currentLocale;
     }
@@ -68,7 +60,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return self
      */
-    public function setCurrentLocale($currentLocale)
+    public function setCurrentLocale(string $currentLocale): self
     {
         $this->currentLocale = $currentLocale;
 
@@ -80,7 +72,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return string
      */
-    public function getFallbackLocale()
+    public function getFallbackLocale(): string
     {
         return $this->fallbackLocale;
     }
@@ -92,7 +84,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return self
      */
-    public function setFallbackLocale($fallbackLocale)
+    public function setFallbackLocale(string $fallbackLocale): self
     {
         $this->fallbackLocale = $fallbackLocale;
 
@@ -104,7 +96,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return MetadataFactory
      */
-    public function getMetadataFactory()
+    public function getMetadataFactory(): MetadataFactory
     {
         return $this->metadataFactory;
     }
@@ -112,7 +104,7 @@ class TranslatableListener implements EventSubscriber
     /**
      * {@inheritdoc}
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::loadClassMetadata,
@@ -127,7 +119,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
         $reflClass = $classMetadata->reflClass;
@@ -152,7 +144,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return TranslatableMetadata|TranslationMetadata
      */
-    public function getTranslatableMetadata($className)
+    public function getTranslatableMetadata(string $className): mixed
     {
         if (array_key_exists($className, $this->cache)) {
             return $this->cache[$className];
@@ -178,7 +170,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    public function postLoad(LifecycleEventArgs $args)
+    public function postLoad(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
 
@@ -203,7 +195,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    private function mapTranslatable(ClassMetadata $mapping)
+    private function mapTranslatable(ClassMetadata $mapping): void
     {
         $metadata = $this->getTranslatableMetadata($mapping->name);
 
@@ -232,7 +224,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    private function mapTranslation(ClassMetadata $mapping)
+    private function mapTranslation(ClassMetadata $mapping): void
     {
         $metadata = $this->getTranslatableMetadata($mapping->name);
 
@@ -295,7 +287,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return bool
      */
-    private function hasUniqueConstraint(ClassMetadata $mapping, array $columns)
+    private function hasUniqueConstraint(ClassMetadata $mapping, array $columns): bool
     {
         if (!array_diff($mapping->getIdentifierColumnNames(), $columns)) {
             return true;
