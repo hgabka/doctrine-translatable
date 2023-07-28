@@ -174,7 +174,7 @@ class TranslatableListener implements EventSubscriber
     {
         $entity = $args->getObject();
 
-        $class = $args->getEntityManager()->getClassMetadata($entity::class)->getName(); // Resolve proxy class
+        $class = $args->getObjectManager()->getClassMetadata($entity::class)->getName(); // Resolve proxy class
         $metadata = $this->getTranslatableMetadata($class);
 
         if ($metadata instanceof TranslatableMetadata) {
