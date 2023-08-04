@@ -2,9 +2,11 @@
 
 namespace Hgabka\Doctrine\Translatable\EventListener;
 
-use Doctrine\Common\EventSubscriber;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -13,13 +15,13 @@ use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 use Hgabka\Doctrine\Translatable\TranslatableInterface;
 use Hgabka\Doctrine\Translatable\TranslationInterface;
 use Metadata\MetadataFactory;
+use ReflectionClass;
+use ReflectionProperty;
 
-/**
- * Load translations on demand
- *
- * @see EventSubscriber
- */
-class TranslatableListener implements EventSubscriber
+
+#[AsDoctrineListener(event: Events::loadClassMetadata, priority: 255)]
+#[AsDoctrineListener(event: Events::postLoad, priority: 255)]
+class TranslatableListener
 {
     /**
      * @var string Locale to use for translations
@@ -151,7 +153,7 @@ class TranslatableListener implements EventSubscriber
         }
 
         if ($metadata = $this->metadataFactory->getMetadataForClass($className)) {
-            $reflection = new \ReflectionClass($className);
+            $reflection = new ReflectionClass($className);
 
             if (!$reflection->isAbstract()) {
                 $metadata->validate();
@@ -170,7 +172,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    public function postLoad(LifecycleEventArgs $args): void
+    public function postLoad(PostLoadEventArgs $args): void
     {
         $entity = $args->getObject();
 
@@ -314,7 +316,7 @@ class TranslatableListener implements EventSubscriber
      */
     private function setReflectionPropertyValue($object, $class, string $property, $value): void
     {
-        $reflection = new \ReflectionProperty($class, $property);
+        $reflection = new ReflectionProperty($class, $property);
         $reflection->setAccessible(true);
         $reflection->setValue($object, $value);
     }
