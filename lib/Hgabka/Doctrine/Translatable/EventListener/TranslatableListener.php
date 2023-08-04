@@ -104,17 +104,6 @@ class TranslatableListener
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getSubscribedEvents(): array
-    {
-        return [
-            Events::loadClassMetadata,
-            Events::postLoad,
-        ];
-    }
-
-    /**
      * Add mapping to translatable entities
      *
      * @param LoadClassMetadataEventArgs $eventArgs
