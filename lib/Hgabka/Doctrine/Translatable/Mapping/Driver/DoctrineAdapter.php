@@ -77,7 +77,7 @@ class DoctrineAdapter
         }
 
         if ($omDriver instanceof DoctrineAttributeDriver) {
-            return new AttributeDriver($omDriver->getReader());
+            return new AttributeDriver();
         }
 
         if ($omDriver instanceof DoctrineFileDriver) {

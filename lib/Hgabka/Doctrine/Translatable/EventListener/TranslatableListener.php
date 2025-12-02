@@ -2,9 +2,10 @@
 
 namespace Hgabka\Doctrine\Translatable\EventListener;
 
-use Doctrine\Common\EventSubscriber;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -13,42 +14,35 @@ use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 use Hgabka\Doctrine\Translatable\TranslatableInterface;
 use Hgabka\Doctrine\Translatable\TranslationInterface;
 use Metadata\MetadataFactory;
+use ReflectionClass;
+use ReflectionProperty;
 
-/**
- * Load translations on demand
- *
- * @see EventSubscriber
- */
-class TranslatableListener implements EventSubscriber
+#[AsDoctrineListener(event: Events::loadClassMetadata, priority: 255)]
+#[AsDoctrineListener(event: Events::postLoad, priority: 255)]
+class TranslatableListener
 {
     /**
      * @var string Locale to use for translations
      */
-    private $currentLocale = 'en';
+    private string $currentLocale = 'en';
 
     /**
      * @var string Locale to use when the current locale is not available
      */
-    private $fallbackLocale = 'en';
-
-    /**
-     * @var MetadataFactory
-     */
-    private $metadataFactory;
+    private string $fallbackLocale = 'en';
 
     /**
      * @var array
      */
-    private $cache = [];
+    private array $cache = [];
 
     /**
      * Constructor
      *
      * @param MetadataFactory $factory
      */
-    public function __construct(MetadataFactory $factory)
+    public function __construct(private readonly MetadataFactory $metadataFactory)
     {
-        $this->metadataFactory = $factory;
     }
 
     /**
@@ -56,7 +50,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return string
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
         return $this->currentLocale;
     }
@@ -68,7 +62,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return self
      */
-    public function setCurrentLocale($currentLocale)
+    public function setCurrentLocale(string $currentLocale): self
     {
         $this->currentLocale = $currentLocale;
 
@@ -80,7 +74,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return string
      */
-    public function getFallbackLocale()
+    public function getFallbackLocale(): string
     {
         return $this->fallbackLocale;
     }
@@ -92,7 +86,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return self
      */
-    public function setFallbackLocale($fallbackLocale)
+    public function setFallbackLocale(string $fallbackLocale): self
     {
         $this->fallbackLocale = $fallbackLocale;
 
@@ -104,20 +98,9 @@ class TranslatableListener implements EventSubscriber
      *
      * @return MetadataFactory
      */
-    public function getMetadataFactory()
+    public function getMetadataFactory(): MetadataFactory
     {
         return $this->metadataFactory;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::loadClassMetadata,
-            Events::postLoad,
-        ];
     }
 
     /**
@@ -127,7 +110,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs): void
     {
         $classMetadata = $eventArgs->getClassMetadata();
         $reflClass = $classMetadata->reflClass;
@@ -152,14 +135,14 @@ class TranslatableListener implements EventSubscriber
      *
      * @return TranslatableMetadata|TranslationMetadata
      */
-    public function getTranslatableMetadata($className)
+    public function getTranslatableMetadata(string $className): mixed
     {
         if (array_key_exists($className, $this->cache)) {
             return $this->cache[$className];
         }
 
         if ($metadata = $this->metadataFactory->getMetadataForClass($className)) {
-            $reflection = new \ReflectionClass($className);
+            $reflection = new ReflectionClass($className);
 
             if (!$reflection->isAbstract()) {
                 $metadata->validate();
@@ -178,11 +161,11 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    public function postLoad(LifecycleEventArgs $args)
+    public function postLoad(PostLoadEventArgs $args): void
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
 
-        $class = $args->getEntityManager()->getClassMetadata(get_class($entity))->getName(); // Resolve proxy class
+        $class = $args->getObjectManager()->getClassMetadata($entity::class)->getName(); // Resolve proxy class
         $metadata = $this->getTranslatableMetadata($class);
 
         if ($metadata instanceof TranslatableMetadata) {
@@ -203,7 +186,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    private function mapTranslatable(ClassMetadata $mapping)
+    private function mapTranslatable(ClassMetadata $mapping): void
     {
         $metadata = $this->getTranslatableMetadata($mapping->name);
 
@@ -232,7 +215,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return void
      */
-    private function mapTranslation(ClassMetadata $mapping)
+    private function mapTranslation(ClassMetadata $mapping): void
     {
         $metadata = $this->getTranslatableMetadata($mapping->name);
 
@@ -295,7 +278,7 @@ class TranslatableListener implements EventSubscriber
      *
      * @return bool
      */
-    private function hasUniqueConstraint(ClassMetadata $mapping, array $columns)
+    private function hasUniqueConstraint(ClassMetadata $mapping, array $columns): bool
     {
         if (!array_diff($mapping->getIdentifierColumnNames(), $columns)) {
             return true;
@@ -322,7 +305,7 @@ class TranslatableListener implements EventSubscriber
      */
     private function setReflectionPropertyValue($object, $class, string $property, $value): void
     {
-        $reflection = new \ReflectionProperty($class, $property);
+        $reflection = new ReflectionProperty($class, $property);
         $reflection->setAccessible(true);
         $reflection->setValue($object, $value);
     }
