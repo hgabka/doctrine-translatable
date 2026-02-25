@@ -9,7 +9,6 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 use Hgabka\Doctrine\Translatable\TranslatableInterface;
@@ -200,7 +199,7 @@ class TranslatableListener
                 'fieldName'     => $metadata->translations->name,
                 'targetEntity'  => $metadata->targetEntity,
                 'mappedBy'      => $targetMetadata->translatable->name,
-                'fetch'         => ClassMetadataInfo::FETCH_EXTRA_LAZY,
+                'fetch'         => ClassMetadata::FETCH_EXTRA_LAZY,
                 'indexBy'       => $targetMetadata->locale->name,
                 'cascade'       => ['persist', 'merge', 'remove'],
                 'orphanRemoval' => true,
