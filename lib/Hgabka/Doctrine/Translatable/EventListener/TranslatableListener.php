@@ -201,7 +201,7 @@ class TranslatableListener
                 'mappedBy'      => $targetMetadata->translatable->name,
                 'fetch'         => ClassMetadata::FETCH_EXTRA_LAZY,
                 'indexBy'       => $targetMetadata->locale->name,
-                'cascade'       => ['persist', 'merge', 'remove'],
+                'cascade'       => ['persist', 'remove'],
                 'orphanRemoval' => true,
             ]);
         }
