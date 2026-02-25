@@ -14,7 +14,7 @@
     }],
     "require": {
         "php": ">=8.0.3",
-        "doctrine/collections": "^3.0",
+        "doctrine/collections": "^2.0",
         "doctrine/common": "^3.0",
         "doctrine/inflector": "^2.0",
         "doctrine/persistence": "^4.0",
