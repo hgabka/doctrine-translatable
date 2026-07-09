@@ -2,8 +2,8 @@
 
 namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
-use Doctrine\Common\Persistence\Mapping\Driver\FileLocator;
-use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\Persistence\Mapping\Driver\FileLocator;
+use Doctrine\Persistence\Mapping\MappingException;
 use Hgabka\Doctrine\Translatable\Mapping\TranslatableMetadata;
 use Hgabka\Doctrine\Translatable\Mapping\TranslationMetadata;
 use Metadata\ClassMetadata;

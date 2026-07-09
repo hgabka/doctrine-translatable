@@ -3,7 +3,7 @@
 namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Persistence\Mapping\ClassMetadataFactory;
+use Doctrine\Persistence\Mapping\ClassMetadataFactory;
 use Hgabka\Doctrine\Translatable\Annotation\CurrentLocale;
 use Hgabka\Doctrine\Translatable\Annotation\FallbackLocale;
 use Hgabka\Doctrine\Translatable\Annotation\Locale;

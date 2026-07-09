@@ -3,8 +3,8 @@
 namespace Hgabka\Doctrine\Translatable\Mapping\Driver;
 
 use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver as BundleMappingDriver;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver as DoctrineAnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver as DoctrineAttributeDriver;
 use Doctrine\ORM\Mapping\Driver\FileDriver as DoctrineFileDriver;
