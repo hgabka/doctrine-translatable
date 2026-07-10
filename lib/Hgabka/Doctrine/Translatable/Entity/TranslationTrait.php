@@ -96,4 +96,44 @@ trait TranslationTrait
 
         return $this;
     }
+
+    /**
+     * Whether this translation has no actual content filled in, besides
+     * the id/locale/translatable bookkeeping fields. Used by a2lix's
+     * TranslationsType to discard empty, non-required locale translations.
+     */
+    public function isEmpty(): bool
+    {
+        $reflection = new \ReflectionClass($this);
+
+        foreach ($reflection->getProperties() as $property) {
+            if (\in_array($property->getName(), ['id', 'locale', 'translatable'], true)) {
+                continue;
+            }
+
+            $property->setAccessible(true);
+
+            if (!$property->isInitialized($this)) {
+                continue;
+            }
+
+            $value = $property->getValue($this);
+
+            if (null === $value || '' === $value) {
+                continue;
+            }
+
+            if (\is_array($value) && [] === $value) {
+                continue;
+            }
+
+            if ($value instanceof \Countable && 0 === \count($value)) {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
 }
