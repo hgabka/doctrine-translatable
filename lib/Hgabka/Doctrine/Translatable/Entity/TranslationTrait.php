@@ -111,8 +111,6 @@ trait TranslationTrait
                 continue;
             }
 
-            $property->setAccessible(true);
-
             if (!$property->isInitialized($this)) {
                 continue;
             }

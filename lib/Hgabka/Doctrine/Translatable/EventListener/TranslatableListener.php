@@ -305,7 +305,6 @@ class TranslatableListener
     private function setReflectionPropertyValue($object, $class, string $property, $value): void
     {
         $reflection = new ReflectionProperty($class, $property);
-        $reflection->setAccessible(true);
         $reflection->setValue($object, $value);
     }
 }
