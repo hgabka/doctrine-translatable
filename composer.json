@@ -9,9 +9,11 @@
         "i18n"
     ],
     "homepage": "http://hgabka.eu",
-    "authors": [{
-        "name": "Gabe"
-    }],
+    "authors": [
+        {
+            "name": "Gabe"
+        }
+    ],
     "require": {
         "php": ">=8.0.3",
         "doctrine/collections": "^2.0",
@@ -24,11 +26,14 @@
         "symfony/yaml": "^6.0"
     },
     "autoload": {
-        "psr-0": { "Hgabka\\Doctrine\\Translatable": "lib/" }
+        "psr-0": {
+            "Hgabka\\Doctrine\\Translatable": "lib/"
+        }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "1.0.x-dev",
+            "dev-v8": "8.0.x-dev"
         }
     }
 }
