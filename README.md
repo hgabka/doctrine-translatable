@@ -12,6 +12,16 @@ composer require hgabka/doctrine-translatable
 
 Követelmények: PHP ≥ 8.0.3, `doctrine/persistence` ^4, `doctrine/collections` ^2, `doctrine/common` ^3, `jms/metadata`. Namespace: `Hgabka\Doctrine\Translatable` (PSR-0, `lib/`).
 
+### Repók
+
+A hgabka csomagok nem szerepelnek a Packagiten, ezért a projekt `composer.json`-jában fel kell venni a repóikat (a függőségek saját `repositories` mezőjét a Composer nem olvassa). A repók nyilvánosak, az `https` url-ekhez nem kell SSH kulcs. Aki GitHub SSH kulccsal dolgozik, használhatja a `git@github.com:hgabka/<név>.git` url-eket is. Kulcs nélkül az anonim GitHub API kérés-limit (60/óra) miatt a Composer előbb-utóbb tokent kérhet.
+
+```json
+"repositories": [
+    {"type": "vcs", "url": "https://github.com/hgabka/doctrine-translatable.git"}
+]
+```
+
 ## Használat
 
 ### Translatable entitás
@@ -91,3 +101,12 @@ Annotation (docblock) és XML/YAML mapping driver is van (`Mapping\Driver\*`), d
 - `postLoad` – beállítja az entitás `currentLocale` / `fallbackLocale` mezőjét.
 - `setCurrentLocale()` / `setFallbackLocale()` (alapérték mindkettőnél `en`) – Symfonyban a bundle állítja a requestből.
 - `getTranslatableMetadata($class)` – a `jms/metadata` alapú metaadat (cache-elve).
+
+## Tesztek
+
+A `require-dev` tartalmazza a szükséges csomagokat, a hgabka bundle-ök repóit a `composer.json` `repositories` szekciója adja, így a bundle önmagában is telepíthető és tesztelhető (a `git@github.com:...` url-ekhez SSH kulcs kell, kulcs nélkül cseréld őket `https://github.com/...`-ra):
+
+```bash
+composer install
+vendor/bin/phpunit
+```

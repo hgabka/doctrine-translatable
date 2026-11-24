@@ -14,6 +14,60 @@
             "name": "Gabe"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/logger-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/node-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/media-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/settings-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/utils-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/seo-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/doctrine-translatable-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/email-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/simple-content-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/i18n-routing-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/acl-bundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/security-acl.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:hgabka/pagepart-bundle.git"
+        }
+    ],
     "require": {
         "php": ">=8.0.3",
         "doctrine/collections": "^2.0",
@@ -23,8 +77,11 @@
         "jms/metadata": "^1.1|^2.0"
     },
     "require-dev": {
-        "symfony/yaml": "^6.0",
-        "phpunit/phpunit": "^10.5|^11.0|^12.0|^13.0"
+        "doctrine/orm": "^3.0",
+        "hgabka/acl-bundle": "^7.1|^8.0",
+        "phpunit/phpunit": "^10.5|^11.0|^12.0|^13.0",
+        "symfony/security-acl": "^7.1|^8.0",
+        "symfony/yaml": "^6.0"
     },
     "autoload": {
         "psr-0": {
